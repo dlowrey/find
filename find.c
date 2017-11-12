@@ -225,4 +225,6 @@ int main (int argc, char ** argv)
         find(where, name, mmin, inum, action, argv);        
     }
 
+    return 0;
+
 }
