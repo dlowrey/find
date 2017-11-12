@@ -1,12 +1,11 @@
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <string.h>
+#include <stdio.h> 
+#include <unistd.h>  // getopt
+#include <dirent.h>  // directory functions
+#include <string.h>  // strcat, strcmp
 #include <libgen.h>  // header files for dirname()
-#include <sys/stat.h>
-#include <time.h>
+#include <sys/stat.h> // file stats
+#include <time.h>  // time
 
 /*
 * Perform an action designated in 'action' on the file
