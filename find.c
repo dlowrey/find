@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <string.h>
+#include <libgen.h>  // header files for dirname()
 #include <sys/stat.h>
 #include <time.h>
 
@@ -31,9 +32,15 @@ void do_action(char * fullpath, char * action, char ** remaining) {
         char * argv[3] = {cat, fullpath, NULL};
         execvp(cat, argv);
     } else if(strcmp(action, mv) == 0) {
-        // perform cat on full path
-        // TODO: need to prepend rest of path to the remaining[0] bit
-        char * argv[4] = {mv, fullpath, remaining[0], NULL};
+        // perform mv
+        // get directory path
+        char * fullcopy = strdup(fullpath);
+        char * newpath = dirname(fullcopy);
+        // add new file name to directory path
+        strcat(newpath, "/");
+        strcat(newpath, remaining[0]);
+        // execute
+        char * argv[4] = {mv, fullpath, newpath, NULL};
         execvp(mv, argv);
     }
 }
@@ -102,6 +109,9 @@ int meets_criteria(char * fullpath, char * entry_name, char * name, char * mmin,
 * Actions available:
     * default print full path of file/directory
     * delete file
+    * remove file
+    * cat file
+    * mv file
 */
 void find(char * where, char * name, char * mmin, char * inum, char * action, char ** remaining)  {
     DIR * dir;// directory stream
