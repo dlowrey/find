@@ -86,7 +86,8 @@ int meets_criteria(char * fullpath, char * entry_name, char * name, char * mmin,
     } else if(inum != NULL) {
         stat(fullpath, &filestats);
         // file's inode number equals input inode number
-        if((long)filestats.st_ino == atol(inum)) {
+        // cast/convert to long long to support 32bit architectures
+        if((long long)filestats.st_ino == atoll(inum)) {
             criteria_met = 1;            
         }
     } else {
