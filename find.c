@@ -1,5 +1,6 @@
 
 #include <stdio.h> 
+#include <stdlib.h>  // required for pre-c89 compilers for use of atol, see https://stackoverflow.com/questions/15418262/troubling-converting-string-to-long-long-in-c
 #include <unistd.h>  // getopt
 #include <dirent.h>  // directory functions
 #include <string.h>  // strcat, strcmp
