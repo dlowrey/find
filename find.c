@@ -1,7 +1,7 @@
 
 #include <stdio.h> 
-#include <stdlib.h>  // required for pre-c89 compilers for use of atol, see https://stackoverflow.com/questions/15418262/troubling-converting-string-to-long-long-in-c
-#include <unistd.h>  // getopt
+#include <stdlib.h>  // required for pre-c89 compilers see https://stackoverflow.com/questions/15418262/troubling-converting-string-to-long-long-in-c
+#include <getopt.h>  // getopt
 #include <dirent.h>  // directory functions
 #include <string.h>  // strcat, strcmp
 #include <libgen.h>  // header files for dirname()
@@ -21,26 +21,20 @@ void do_action(char * fullpath, char * action, char ** remaining) {
     char * rm = "rm";
     char * mv = "mv";
 
-    if(action == NULL ) {
+    if(action == NULL) {
         // no action, print full path
         printf("%s\n", fullpath);
     } else if(strcmp(action, delete) == 0 || strcmp(action, rm) == 0) {
-        // delete file at full path
-        remove(fullpath);
+        // delete file at full path recursivley in case it is a directory.
+        char * argv[4] = {rm, "-r", fullpath, NULL};
+        execvp(rm, argv);
     } else if(strcmp(action, cat) == 0) {
         // perform cat on full path
         char * argv[3] = {cat, fullpath, NULL};
         execvp(cat, argv);
     } else if(strcmp(action, mv) == 0) {
-        // perform mv
-        // get directory path
-        char * fullcopy = strdup(fullpath);
-        char * newpath = dirname(fullcopy);
-        // add new file name to directory path
-        strcat(newpath, "/");
-        strcat(newpath, remaining[0]);
-        // execute
-        char * argv[4] = {mv, fullpath, newpath, NULL};
+        // perform mv on found file
+        char * argv[4] = {mv, fullpath, remaining[0], NULL};
         execvp(mv, argv);
     }
 }
@@ -62,25 +56,25 @@ int meets_criteria(char * fullpath, char * entry_name, char * name, char * mmin,
     } else if(mmin != NULL) {
         stat(fullpath, &filestats);
         char modifier;
-        int seconds;
+        int minutes;
         int lastmodified;
         // check for '+' or '-' and convert
-        // time given in minutes to seconds
+        // time given in minutes to minutes
         if(!isdigit(mmin[0])) {
             modifier = mmin[0];
-            seconds = atoi(++mmin) * 60;
+            minutes = atoi(++mmin);
         } else {
-            seconds = atoi(mmin) * 60;
+            minutes = atoi(mmin);
         }
-        lastmodified = (int)(time(0) - filestats.st_mtime);
+        lastmodified = (int)(time(0) - filestats.st_mtime) / 60;
         // greater than 
-        if(modifier == '+' && lastmodified > seconds) {
+        if(modifier == '+' && lastmodified > minutes) {
             criteria_met = 1;
         // less than
-        } else if( modifier == '-' && lastmodified < seconds) {
+        } else if( modifier == '-' && lastmodified < minutes) {
             criteria_met = 1;
         // equal (exactly)
-        } else if(lastmodified == seconds) {
+        } else if(lastmodified == minutes) {
             criteria_met = 1;            
         }
     } else if(inum != NULL) {
@@ -125,9 +119,6 @@ void find(char * where, char * name, char * mmin, char * inum, char * action, ch
     int is_dots;  
     int criteria = name != NULL || mmin != NULL || inum != NULL;
 
-    // no default specified, set cwd
-    if(where == NULL){where = ".";}
-    
     if (dir = opendir(where)) {
 
         while ((entry = readdir(dir)) != NULL) {
@@ -142,13 +133,15 @@ void find(char * where, char * name, char * mmin, char * inum, char * action, ch
             // if the entry is a sub directory and is not "." or ".."
             if (!is_dots) {
                 
+                // perform action on entry
                 if (meets_criteria(fullpath, e_name, name, mmin, inum)) {
                     // perform some action on file
                     do_action(fullpath, action, remaining);
                 }
 
+                // if entry is directory, recursivly call find for entry
                 if (e_type == DT_DIR) {
-                    // recursive list sub directory
+                    // recursive for directory
                     find(fullpath, name, mmin, inum, action, remaining);
                 }
     
@@ -183,13 +176,18 @@ int main (int argc, char ** argv)
     // sepcified option variable
     char c;
 
-    while ((c = getopt(argc, argv, "w:n:m:i:a:")) != -1) {
+    static struct option long_options[] = {
+        {"name", required_argument, NULL, 'n'},
+        {"mmin", required_argument, NULL, 'm'},
+        {"inode", required_argument, NULL, 'i'},
+        {"action", required_argument, NULL, 'a'},
+        {NULL, 0, NULL, 0}
+    };
+
+    where = (argv[1] == NULL) ? ".": argv[1];
+    while ((c = getopt_long_only(argc, argv, "w:n:m:i:a:", long_options, NULL)) != -1) {
 
         switch (c) {
-            case 'w':
-                where = optarg;
-                printf ("where: %s\n",optarg);
-                break;
             case 'n':
                 name = optarg;
                 printf ("name: %s\n", optarg);
