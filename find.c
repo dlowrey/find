@@ -178,7 +178,7 @@ int main (int argc, char ** argv)
 
     static struct option long_options[] = {
         {"name", required_argument, NULL, 'n'},
-        {"mmin", required_argument, NULL, 'm'},
+        {"min", required_argument, NULL, 'm'},
         {"inum", required_argument, NULL, 'i'},
         {"exec", required_argument, NULL, 'e'},
         {NULL, 0, NULL, 0}
@@ -198,19 +198,15 @@ int main (int argc, char ** argv)
         switch (c) {
             case 'n':
                 name = optarg;
-                printf ("name: %s\n", optarg);
                 break;
             case 'm':
                 mmin = optarg;
-                printf("mmin: %s\n", optarg);
                 break;
             case 'i':
                 inum = optarg;
-                printf("inum: %s\n", optarg);
                 break;
             case 'e':
                 action = optarg;
-                printf("exec: %s\n", optarg);
                 break;
             case '?':
                 // invalid arg
