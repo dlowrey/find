@@ -171,7 +171,6 @@ int main (int argc, char ** argv)
     char *inum = NULL;
     // action variables
     char *action = NULL;
-    char *data = NULL;
     // sepcified option variable
     char c;
 
