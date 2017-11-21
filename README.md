@@ -70,7 +70,7 @@ Find files matching any specified criteria and output their contents.
 
 **find where-to-look criteria -exec mv newfilename**
 
-Find files matching any specified criteria and rename/move them.
+Find files or directories matching any specified criteria and rename/move them.
 
-- `find testdir -name testfile -exec mv dummyfile`  // moves file named testfile to current directory and renames it dummyfile
-- `find -name testfile2 -exec mv testfile21`
+- `find testdir -name testfile -exec mv dummyfile`  
+- `find -name dummyDir1 -exec mv dummyDir2` 
