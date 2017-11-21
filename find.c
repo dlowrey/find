@@ -127,9 +127,9 @@ void find(char * where, char * name, char * mmin, char * inum, char * action, ch
 
     // no default specified, set cwd
     if(where == NULL){where = ".";}
-
+    
     if (dir = opendir(where)) {
-  
+
         while ((entry = readdir(dir)) != NULL) {
             e_type = entry -> d_type;
             e_name = entry -> d_name;
@@ -140,21 +140,20 @@ void find(char * where, char * name, char * mmin, char * inum, char * action, ch
             "%s/%s", where, e_name);
     
             // if the entry is a sub directory and is not "." or ".."
-            if (e_type == DT_DIR && !is_dots) {
-                // no criteria given, print path
-                if (!criteria) {
-                    printf("%s\n", fullpath);                  
-                }
-                // recursive list sub directory
-                find(fullpath, name, mmin, inum, action, remaining);
-    
-            } else if (!is_dots) {
-                // look for criteria regarding the file
-                if(meets_criteria(fullpath, e_name, name, mmin, inum)) {
+            if (!is_dots) {
+                
+                if (meets_criteria(fullpath, e_name, name, mmin, inum)) {
                     // perform some action on file
                     do_action(fullpath, action, remaining);
-                }    
-            }    
+                }
+
+                if (e_type == DT_DIR) {
+                    // recursive list sub directory
+                    find(fullpath, name, mmin, inum, action, remaining);
+                }
+    
+            } 
+  
         }
     
         // close directory stream
