@@ -175,14 +175,6 @@ int main (int argc, char ** argv)
     // sepcified option variable
     char c;
 
-    static struct option long_options[] = {
-        {"name", required_argument, NULL, 'n'},
-        {"min", required_argument, NULL, 'm'},
-        {"inum", required_argument, NULL, 'i'},
-        {"exec", required_argument, NULL, 'e'},
-        {NULL, 0, NULL, 0}
-    };
-
     // set where-to-look
     if (argc > 1 && argv[1][0] != '-') {
         where = argv[1];
@@ -191,6 +183,15 @@ int main (int argc, char ** argv)
     } else {
         where = ".";
     }
+
+    // comand line option arguments
+    static struct option long_options[] = {
+        {"name", required_argument, NULL, 'n'},
+        {"min", required_argument, NULL, 'm'},
+        {"inum", required_argument, NULL, 'i'},
+        {"exec", required_argument, NULL, 'e'},
+        {NULL, 0, NULL, 0}
+    };
 
     while ((c = getopt_long_only(argc, argv, "w:n:m:i:e:", long_options, NULL)) != -1) {
 
