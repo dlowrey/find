@@ -179,13 +179,21 @@ int main (int argc, char ** argv)
     static struct option long_options[] = {
         {"name", required_argument, NULL, 'n'},
         {"mmin", required_argument, NULL, 'm'},
-        {"inode", required_argument, NULL, 'i'},
-        {"action", required_argument, NULL, 'a'},
+        {"inum", required_argument, NULL, 'i'},
+        {"exec", required_argument, NULL, 'e'},
         {NULL, 0, NULL, 0}
     };
 
-    where = (argv[1] == NULL) ? ".": argv[1];
-    while ((c = getopt_long_only(argc, argv, "w:n:m:i:a:", long_options, NULL)) != -1) {
+    // set where-to-look
+    if (argc > 1 && argv[1][0] != '-') {
+        where = argv[1];
+        argc--;
+        argv++;
+    } else {
+        where = ".";
+    }
+
+    while ((c = getopt_long_only(argc, argv, "w:n:m:i:e:", long_options, NULL)) != -1) {
 
         switch (c) {
             case 'n':
@@ -200,9 +208,9 @@ int main (int argc, char ** argv)
                 inum = optarg;
                 printf("inum: %s\n", optarg);
                 break;
-            case 'a':
+            case 'e':
                 action = optarg;
-                printf("action: %s\n", optarg);
+                printf("exec: %s\n", optarg);
                 break;
             case '?':
                 // invalid arg
