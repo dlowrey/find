@@ -21,18 +21,18 @@ void do_action(char * fullpath, char * action, char ** remaining) {
     char * rm = "rm";
     char * mv = "mv";
 
-    if(action == NULL) {
+    if (action == NULL) {
         // no action, print full path
         printf("%s\n", fullpath);
-    } else if(strcmp(action, delete) == 0 || strcmp(action, rm) == 0) {
+    } else if (strcmp(action, delete) == 0 || strcmp(action, rm) == 0) {
         // delete file at full path recursivley in case it is a directory.
         char * argv[4] = {rm, "-r", fullpath, NULL};
         execvp(rm, argv);
-    } else if(strcmp(action, cat) == 0) {
+    } else if (strcmp(action, cat) == 0) {
         // perform cat on full path
         char * argv[3] = {cat, fullpath, NULL};
         execvp(cat, argv);
-    } else if(strcmp(action, mv) == 0) {
+    } else if (strcmp(action, mv) == 0) {
         // perform mv on found file
         char * argv[4] = {mv, fullpath, remaining[0], NULL};
         execvp(mv, argv);
@@ -48,19 +48,19 @@ int meets_criteria(char * fullpath, char * entry_name, char * name, char * mmin,
     int criteria_met = 0;
     struct stat filestats;
 
-    if(name != NULL) {
+    if (name != NULL) {
         // if the entry name matches the critera name
         if(strcmp(entry_name, name) == 0) {
             criteria_met = 1;
         }
-    } else if(mmin != NULL) {
+    } else if (mmin != NULL) {
         stat(fullpath, &filestats);
         char modifier;
         int minutes;
         int lastmodified;
         // check for '+' or '-' and convert
         // time given in minutes to minutes
-        if(!isdigit(mmin[0])) {
+        if (!isdigit(mmin[0])) {
             modifier = mmin[0];
             minutes = atoi(++mmin);
         } else {
@@ -68,20 +68,20 @@ int meets_criteria(char * fullpath, char * entry_name, char * name, char * mmin,
         }
         lastmodified = (int)(time(0) - filestats.st_mtime) / 60;
         // greater than 
-        if(modifier == '+' && lastmodified > minutes) {
+        if (modifier == '+' && lastmodified > minutes) {
             criteria_met = 1;
         // less than
-        } else if( modifier == '-' && lastmodified < minutes) {
+        } else if ( modifier == '-' && lastmodified < minutes) {
             criteria_met = 1;
         // equal (exactly)
-        } else if(lastmodified == minutes) {
+        } else if (lastmodified == minutes) {
             criteria_met = 1;            
         }
-    } else if(inum != NULL) {
+    } else if (inum != NULL) {
         stat(fullpath, &filestats);
         // file's inode number equals input inode number
         // cast/convert to long long to support 32bit architectures
-        if((long long)filestats.st_ino == atoll(inum)) {
+        if ((long long)filestats.st_ino == atoll(inum)) {
             criteria_met = 1;            
         }
     } else {
@@ -223,7 +223,7 @@ int main (int argc, char ** argv)
     argc -= optind;
     argv += optind;
 
-    if(valid) {
+    if (valid) {
         find(where, name, mmin, inum, action, argv);        
     }
 
