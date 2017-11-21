@@ -93,20 +93,20 @@ int meets_criteria(char * fullpath, char * entry_name, char * name, char * mmin,
 
 
 /*
-* find files that meet critera if any is given, and perform an action on
-* those files if any action is given. 
+* find files and/or directories that meet critera if any, and perform an action on
+* those files if any is given. 
 * Criteria available:
-    * default none
-    * match file name 
-    * file modified greater than, less than, or exactly at specified time
-    * file inode matches given inode
+    * none (default)
+    * match name (-name <filename>) 
+    * last modified time (-min <[+|-|]minutes>)
+    * match inode number (-inum <inode number>)
 
 * Actions available:
-    * default print full path of file/directory
-    * delete file
-    * remove file
-    * cat file
-    * mv file
+    * print full path of file/directory (default)
+    * delete file (-exec delete)
+    * remove file (-exec rm)
+    * cat file (-exec cat)
+    * mv file (-exec mv <specified path>)
 */
 void find(char * where, char * name, char * mmin, char * inum, char * action, char ** remaining)  {
     DIR * dir;// directory stream
