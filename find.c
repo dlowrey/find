@@ -148,7 +148,6 @@ void find(char * where, char * name, char * mmin, char * inum, char * action, ch
             } 
   
         }
-    
         // close directory stream
         closedir(dir);  
     } else {
