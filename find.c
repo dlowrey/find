@@ -207,10 +207,6 @@ int main (int argc, char ** argv)
             case 'e':
                 action = optarg;
                 break;
-            case '?':
-                // invalid arg
-                valid = 0;
-                break;
             default:
                 // invalid
                 valid = 0;
