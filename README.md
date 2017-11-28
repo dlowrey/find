@@ -14,6 +14,12 @@ and optionally perform an action once that file has been found. Supported action
 - output the file contents (cat),
 - move/rename the fiel (mv)
 
+## To Run
+
+1. Clone this Repo, or obtain a copy of the `find.c` file.
+2. On a Linux OS, `gcc -o find /path/to/find.c`
+3. You can now run `./find` from the directory where #2 was executed from.
+
 ## Syntax 
 
 ### find where-to-look
