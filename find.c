@@ -187,6 +187,8 @@ int main (int argc, char ** argv)
     } else {
         where = ".";
     }
+    // print out initial directory if any
+    printf("%s\n", where);
 
     // comand line option arguments
     static struct option long_options[] = {
