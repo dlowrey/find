@@ -36,6 +36,8 @@ void do_action(char * fullpath, char * action, char ** remaining) {
         // perform mv on found file
         char * argv[4] = {mv, fullpath, remaining[0], NULL};
         execvp(mv, argv);
+    } else {
+        printf("Invalid -exec command \"%s\" for file %s.\n", action, fullpath);
     }
 }
 
