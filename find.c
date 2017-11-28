@@ -34,6 +34,9 @@ void do_action(char * fullpath, char * action, char ** remaining) {
         execvp(cat, argv);
     } else if (strcmp(action, mv) == 0) {
         // perform mv on found file
+        // TODO: would like to find a way to pass all remaining arguments
+        // instead of just the first one, so that user could use options when 
+        // using -exec.
         char * argv[4] = {mv, fullpath, remaining[0], NULL};
         execvp(mv, argv);
     } else {
