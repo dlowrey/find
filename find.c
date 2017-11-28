@@ -181,14 +181,14 @@ int main (int argc, char ** argv)
 
     // set where-to-look
     if (argc > 1 && argv[1][0] != '-') {
+        // user given directory
         where = argv[1];
         argc--;
         argv++;
     } else {
+        // current directory
         where = ".";
     }
-    // print out initial directory if any
-    printf("%s\n", where);
 
     // comand line option arguments
     static struct option long_options[] = {
@@ -199,6 +199,7 @@ int main (int argc, char ** argv)
         {NULL, 0, NULL, 0}
     };
 
+    // get command line options
     while ((c = getopt_long_only(argc, argv, "w:n:m:i:e:", long_options, NULL)) != -1) {
 
         switch (c) {
@@ -225,6 +226,12 @@ int main (int argc, char ** argv)
     argc -= optind;
     argv += optind;
 
+    // print out initial directory if no criteria or action was given
+    if (name == NULL && mmin == NULL && inum == NULL && action == NULL) {
+        printf("%s\n", where);        
+    }
+
+    // if valid options were given, call find funciton
     if (valid) {
         find(where, name, mmin, inum, action, argv);        
     }
